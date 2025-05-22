@@ -10,7 +10,7 @@ import com.example.braindock.database.NoteDatabase
 import com.example.braindock.repository.NoteRepository
 import com.example.braindock.viewmodel.NoteViewModel
 import com.example.braindock.viewmodel.NoteViewModelFactory
-import com.example.notesroompractice.R
+import com.example.braindock.R
 
 class MainActivity : AppCompatActivity() {
     lateinit var noteViewModel: NoteViewModel
@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
 //            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
 //            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
 //            insets
-        }
+    }
 
 
     private fun setupViewModel(){
@@ -34,3 +34,4 @@ class MainActivity : AppCompatActivity() {
         noteViewModel = ViewModelProvider(this,viewModelProviderFactory )[NoteViewModel::class.java]
     }
 }
+

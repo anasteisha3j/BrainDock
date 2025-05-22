@@ -1,18 +1,19 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    id ("kotlin-kapt")
-    id ("kotlin-parcelize")
+    id("kotlin-kapt")
+    id("kotlin-parcelize")
+    id("androidx.navigation.safeargs")
     id("com.google.devtools.ksp")
-    id ("androidx.navigation.safeargs")
 }
 
+
 android {
-    namespace = "com.example.notesroompractice"
+    namespace = "com.example.braindock"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.notesroompractice"
+        applicationId = "com.example.braindock"
         minSdk = 28
         targetSdk = 34
         versionCode = 1

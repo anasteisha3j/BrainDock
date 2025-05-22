@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.braindock.fragments.HomeFragmentDirections
-import com.example.notesroompractice.databinding.NoteLayoutBinding
+import com.example.braindock.databinding.NoteLayoutBinding
 import com.example.braindock.model.Note
 
 
@@ -25,8 +25,8 @@ class NoteAdapter: RecyclerView.Adapter<NoteAdapter.NoteViewHolder>() {
         }
 
         override fun areContentsTheSame(oldItem: Note, newItem: Note): Boolean {
-                return oldItem == newItem
-            }
+            return oldItem == newItem
+        }
     }
     val differ  = AsyncListDiffer(this,differCallback)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {

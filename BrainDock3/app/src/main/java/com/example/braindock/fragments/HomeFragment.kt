@@ -17,8 +17,8 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.braindock.MainActivity
 import com.example.braindock.adapter.NoteAdapter
 import com.example.braindock.viewmodel.NoteViewModel
-import com.example.notesroompractice.R
-import com.example.notesroompractice.databinding.FragmentHomeBinding
+import com.example.braindock.R
+import com.example.braindock.databinding.FragmentHomeBinding
 import com.example.braindock.model.Note
 
 class HomeFragment : Fragment(R.layout.fragment_home), SearchView.OnQueryTextListener,MenuProvider {
@@ -45,6 +45,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), SearchView.OnQueryTextLis
         menuHost.addMenuProvider(this,viewLifecycleOwner,Lifecycle.State.RESUMED)
 
         notesViewModel=(activity as MainActivity).noteViewModel
+        setupRecyclerView()
 
         binding.addNoteFab.setOnClickListener {
             it.findNavController().navigate(R.id.action_homeFragment_to_addNoteFragment)
@@ -81,12 +82,28 @@ class HomeFragment : Fragment(R.layout.fragment_home), SearchView.OnQueryTextLis
         }
     }
 
+    private fun searchNote(query: String?){
+        val searchQuery = "%$query"
+
+        notesViewModel.searchNote(searchQuery).observe(this){list->
+            noteAdapter.differ.submitList(list)
+        }
+    }
+
     override fun onQueryTextSubmit(query: String?): Boolean {
-        TODO("Not yet implemented")
+        return false
     }
 
     override fun onQueryTextChange(newText: String?): Boolean {
-        TODO("Not yet implemented")
+        if (newText != null){
+            searchNote(newText)
+        }
+        return true
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        homeBinding=null
     }
 
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
@@ -99,7 +116,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), SearchView.OnQueryTextLis
     }
 
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-        TODO("Not yet implemented")
+        return false
     }
 
 
