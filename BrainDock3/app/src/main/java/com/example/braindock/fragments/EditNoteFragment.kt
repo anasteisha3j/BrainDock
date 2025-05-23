@@ -19,87 +19,82 @@ import com.example.braindock.MainActivity
 import com.example.braindock.model.Note
 import com.example.braindock.viewmodel.NoteViewModel
 import com.example.braindock.R
-import com.example.braindock.databinding.FragmentAddNoteBinding
 import com.example.braindock.databinding.FragmentEditNoteBinding
 
+class EditNoteFragment : Fragment(R.layout.fragment_edit_note), MenuProvider {
 
-class EditNoteFragment : Fragment(R.layout.fragment_edit_note),MenuProvider {
-    private var editNoteBinding: FragmentEditNoteBinding?=null
+    private var editNoteBinding: FragmentEditNoteBinding? = null
     private val binding get() = editNoteBinding!!
 
     private lateinit var notesViewModel: NoteViewModel
-    private lateinit var editNoteView: Note
     private lateinit var currentNote: Note
 
-
     private val args: EditNoteFragmentArgs by navArgs()
-
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        editNoteBinding=FragmentEditNoteBinding.inflate(inflater,container,false)
+        editNoteBinding = FragmentEditNoteBinding.inflate(inflater, container, false)
         return binding.root
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val menuHost: MenuHost = requireActivity()
-        menuHost.addMenuProvider(this,viewLifecycleOwner, Lifecycle.State.RESUMED)
 
-        notesViewModel=(activity as MainActivity).noteViewModel
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
+
+        notesViewModel = (activity as MainActivity).noteViewModel
         currentNote = args.note!!
 
         binding.editNoteTitle.setText(currentNote.noteTitle)
         binding.editNoteDesc.setText(currentNote.noteDesc)
-
-        binding.editNoteTitle.setOnClickListener{
-            val noteTitle = binding.editNoteTitle.text.toString().trim()
-            val noteDesc = binding.editNoteDesc.text.toString().trim()
-
-            if(noteTitle.isNotEmpty()){
-                val note = Note(currentNote.id, noteTitle,noteDesc)
-                notesViewModel.updateNote(note)
-                view.findNavController().popBackStack(R.id.homeFragment,false)
-            }else{
-                Toast.makeText(context,"Please enter note Title", Toast.LENGTH_SHORT).show()
-            }
-        }
     }
 
-
-    private fun deleteNote()
-    {
+    private fun deleteNote() {
         AlertDialog.Builder(activity).apply {
-            setTitle("Delete Title")
+            setTitle("Delete Note")
             setMessage("Do you want to delete this note?")
-            setPositiveButton("Delete"){_,_ ->
+            setPositiveButton("Delete") { _, _ ->
                 notesViewModel.deleteNote(currentNote)
-                Toast.makeText(context,"Note Deleted", Toast.LENGTH_SHORT).show()
-                view?.findNavController()?.popBackStack(R.id.homeFragment,false)
+                Toast.makeText(context, "Note Deleted", Toast.LENGTH_SHORT).show()
+                view?.findNavController()?.popBackStack(R.id.homeFragment, false)
             }
-            setNegativeButton("Cancel",null)
+            setNegativeButton("Cancel", null)
         }.create().show()
     }
 
+    private fun saveNote() {
+        val noteTitle = binding.editNoteTitle.text.toString().trim()
+        val noteDesc = binding.editNoteDesc.text.toString().trim()
 
+        if (noteTitle.isNotEmpty()) {
+            val note = Note(currentNote.id, noteTitle, noteDesc)
+            notesViewModel.updateNote(note)
+            Toast.makeText(context, "Note Updated", Toast.LENGTH_SHORT).show()
+            view?.findNavController()?.popBackStack(R.id.homeFragment, false)
+        } else {
+            Toast.makeText(context, "Please enter note title", Toast.LENGTH_SHORT).show()
+        }
+    }
 
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
         menu.clear()
-        menuInflater.inflate(R.menu.menu_edit_note,menu)
+        menuInflater.inflate(R.menu.menu_edit_note, menu)
     }
 
-
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-        return when(menuItem.itemId){
-            R.id.deleteMenu->{
+        return when (menuItem.itemId) {
+            R.id.saveMenu -> {
+                saveNote()
+                true
+            }
+            R.id.deleteMenu -> {
                 deleteNote()
                 true
-            }else -> false
+            }
+            else -> false
         }
     }
 
@@ -107,5 +102,4 @@ class EditNoteFragment : Fragment(R.layout.fragment_edit_note),MenuProvider {
         super.onDestroy()
         editNoteBinding = null
     }
-
 }

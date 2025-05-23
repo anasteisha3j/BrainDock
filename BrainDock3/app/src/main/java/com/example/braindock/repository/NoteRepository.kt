@@ -11,6 +11,6 @@ class NoteRepository (private val db: NoteDatabase){
 
 
     fun getAllNotes()=db.getNoteDao().getAllNotes()
-    fun searchNote(query: String?)=db.getNoteDao().searchNote(query)
+    fun searchNote(query: String?)= query?.let { db.getNoteDao().searchNote(it) }
 
 }
